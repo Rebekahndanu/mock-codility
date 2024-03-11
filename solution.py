@@ -19,36 +19,38 @@ def solution(A, D):
     card_payment = 0
 
     # Dictionary to store transaction counts for each month
-    transaction_counts = {}
-
-    # Extracting year and month from the current transaction date
-    # current_transaction_year = D[i][0]
-    # current_transaction_month = D[i][1]
+    transactions = {}
 
     #Iterating through our list to know if it was income received or a card payment
     for i in range(len(A)):
         # Checking whether it's income received or a card payment
+        # income received
         if A[i] > 0:
             income += A[i]
 
+        # card payment
         elif A[i] < 0:
             card_payment -= A[i] 
 
+       # Extracting year, month, and day from the transaction date
+        trans_year, trans_month, trans_day = map(int, D[i].split('-'))
+        trans_date = (trans_year, trans_month)
+
         # Count the number of transactions for each month
-        month = (D[i][0], D[i][1])
-        transaction_counts[month] = transaction_counts.get(month, 0) + 1
+        transactions[trans_date] = transactions.get(trans_date, 0) + 1
+
 
     # Deduct card payment only if there are less than 3 transactions of 100 or more in a month
-    for month, count in transaction_counts.items():
+    for trans_date, count in transactions.items():
         if count < 3:
-            card_payment += 5
+            card_payment -= 5
 
     # total at the end of the year
     result = income - card_payment
     return result
         
 # Example usage:
-A = [50, -5, 100, -200, 150]
-D = [(2024, 1), (2024, 1), (2024, 2), (2024, 2), (2024, 2)]
+A = [100, 100, 100, -10]
+D = ["2020-12-31", "2020-12-22", "2020-12-03", "2020-12-29"]
 final_result = solution(A, D)
-print("Final result:", final_result)
+print(final_result)
